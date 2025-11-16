@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Header with Animated Background - Only on landing page -->
+<header class="hero-header">
+    <div id="background-animation"></div>
+    <div class="header-content">
+        <h1 class="hero-title">BioAgriCure</h1>
+        <p class="hero-subtitle">AI that protects every leaf</p>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="container">
+        <h2>Welcome to BioAgriCure</h2>
+
+        <a href="{{ url_for('main.upload') }}" class="cta-button button">Start Detection</a>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>1. Upload Image</h3>
+                <p>Upload a clear image of your plant or affected leaves.</p>
+            </div>
+            <div class="feature-card">
+                <h3>2. AI Analysis</h3>
+                <p>Our CNN model analyzes the image to detect potential diseases.</p>
+            </div>
+            <div class="feature-card">
+                <h3>3. Get Results</h3>
+                <p>Receive detailed information about the disease, symptoms, and cure.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials-section">
+    <div class="container">
+        <h2>What Experts Say</h2>
+        <p class="section-subtitle">Hear from farmers and agricultural experts about the importance of technology in modern farming</p>
+        
+        <div class="testimonial-grid">
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        <strong>Dr. Rajesh Kumar</strong>
+                        <p class="para">Agricultural Scientist, ICAR</p>
+                    </div>
+                    <div class="footer">
+                        <svg viewBox="0 0 24 24" class="quotes quotes-open">
+                            <path fill="currentColor" d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path>
+                        </svg>
+                        <p class="para">
+                            AI-powered disease detection is revolutionizing agriculture. Early identification saves crops and increases yield by 30%. This technology is the future of sustainable farming.
+                        </p>
+                        <svg viewBox="0 0 24 24" class="quotes quotes-close">
+                            <path fill="currentColor" d="M19.4166 6.67891C20.4468 7.77257 21 9.00001 21 10.9897C21 14.4891 18.5435 17.6263 14.9694 19.1768L14.0767 17.7992C17.412 16.0946 18.0638 13.754 18.3244 12.278C17.7874 12.5557 17.0844 12.6534 16.3953 12.5895C14.5909 12.4222 13.1688 10.941 13.1688 9.00001C13.1688 7.06701 14.7358 5.50001 16.6688 5.50001C17.7419 5.50001 18.768 5.99054 19.4166 6.67891ZM9.41659 6.67891C10.4468 7.77257 11 9.00001 11 10.9897C11 14.4891 8.54352 17.6263 4.96944 19.1768L4.07675 17.7992C7.41199 16.0946 8.06385 13.754 8.32439 12.278C7.78741 12.5557 7.08446 12.6534 6.39533 12.5895C4.59096 12.4222 3.16882 10.941 3.16882 9.00001C3.16882 7.06701 4.73582 5.50001 6.66882 5.50001C7.74188 5.50001 8.76802 5.99054 9.41659 6.67891Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        <strong>Sarah Johnson</strong>
+                        <p class="para">Organic Farmer, California</p>
+                    </div>
+                    <div class="footer">
+                        <svg viewBox="0 0 24 24" class="quotes quotes-open">
+                            <path fill="currentColor" d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path>
+                        </svg>
+                        <p class="para">
+                            Using technology for disease detection has reduced my crop losses significantly. Quick diagnosis means faster treatment and healthier plants. It's a game-changer for small farms.
+                        </p>
+                        <svg viewBox="0 0 24 24" class="quotes quotes-close">
+                            <path fill="currentColor" d="M19.4166 6.67891C20.4468 7.77257 21 9.00001 21 10.9897C21 14.4891 18.5435 17.6263 14.9694 19.1768L14.0767 17.7992C17.412 16.0946 18.0638 13.754 18.3244 12.278C17.7874 12.5557 17.0844 12.6534 16.3953 12.5895C14.5909 12.4222 13.1688 10.941 13.1688 9.00001C13.1688 7.06701 14.7358 5.50001 16.6688 5.50001C17.7419 5.50001 18.768 5.99054 19.4166 6.67891ZM9.41659 6.67891C10.4468 7.77257 11 9.00001 11 10.9897C11 14.4891 8.54352 17.6263 4.96944 19.1768L4.07675 17.7992C7.41199 16.0946 8.06385 13.754 8.32439 12.278C7.78741 12.5557 7.08446 12.6534 6.39533 12.5895C4.59096 12.4222 3.16882 10.941 3.16882 9.00001C3.16882 7.06701 4.73582 5.50001 6.66882 5.50001C7.74188 5.50001 8.76802 5.99054 9.41659 6.67891Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        <strong>Prof. Michael Chen</strong>
+                        <p class="para">Agricultural Technology Expert, MIT</p>
+                    </div>
+                    <div class="footer">
+                        <svg viewBox="0 0 24 24" class="quotes quotes-open">
+                            <path fill="currentColor" d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path>
+                        </svg>
+                        <p class="para">
+                            Machine learning in agriculture ensures food security for future generations. Precision farming with AI reduces pesticide use by 40% while maintaining crop health and quality.
+                        </p>
+                        <svg viewBox="0 0 24 24" class="quotes quotes-close">
+                            <path fill="currentColor" d="M19.4166 6.67891C20.4468 7.77257 21 9.00001 21 10.9897C21 14.4891 18.5435 17.6263 14.9694 19.1768L14.0767 17.7992C17.412 16.0946 18.0638 13.754 18.3244 12.278C17.7874 12.5557 17.0844 12.6534 16.3953 12.5895C14.5909 12.4222 13.1688 10.941 13.1688 9.00001C13.1688 7.06701 14.7358 5.50001 16.6688 5.50001C17.7419 5.50001 18.768 5.99054 19.4166 6.67891ZM9.41659 6.67891C10.4468 7.77257 11 9.00001 11 10.9897C11 14.4891 8.54352 17.6263 4.96944 19.1768L4.07675 17.7992C7.41199 16.0946 8.06385 13.754 8.32439 12.278C7.78741 12.5557 7.08446 12.6534 6.39533 12.5895C4.59096 12.4222 3.16882 10.941 3.16882 9.00001C3.16882 7.06701 4.73582 5.50001 6.66882 5.50001C7.74188 5.50001 8.76802 5.99054 9.41659 6.67891Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

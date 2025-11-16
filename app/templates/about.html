@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}About - BioAgriCure{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="container">
+        <h2>About BioAgriCure</h2>
+        
+        <div class="about-content">
+            <div class="about-section-item">
+                <h3>Development Team</h3>
+                <p>
+                    <strong>Institution:</strong> Dr. Ambedkar Institute of Technology (Dr. AIT)<br>
+                    <strong>Programme:</strong> Computer Science and Engineering (CSE)<br>
+                    <strong>Project Guide:</strong> Prof. Sneha G , CSE Programme ,Dr. AIT</p>
+                <p><strong>Developers:</strong></p>
+                <ul style="list-style-position: inside; line-height: 2;">
+                    <li>VINAY D S (1DA23CS195) - <a href="mailto:1da23cs195.cs@drait.edu.in" style="color: var(--primary-color); text-decoration: none;">1da23cs195.cs@drait.edu.in</a></li>
+                    <li>PREETHAM REDDY T N (1DA23CS132) - <a href="mailto:1da23cs132.cs@drait.edu.in" style="color: var(--primary-color); text-decoration: none;">1da23cs132.cs@drait.edu.in</a></li>
+                    <li>YADUNANDAN G D (1DA23CS199) - <a href="mailto:1da23cs199.cs@drait.edu.in" style="color: var(--primary-color); text-decoration: none;">1da23cs199.cs@drait.edu.in</a></li>
+                </ul>
+                <p>
+                    This project was developed as part of the academic curriculum at Dr. Ambedkar Institute of Technology, showcasing the practical application of artificial intelligence and machine learning in agriculture. The development team from the CSE department has worked diligently to create an accessible, efficient, and accurate plant disease detection system that can benefit farmers and the agricultural community.
+                </p>
+            </div>
+            
+            <div class="about-intro">
+                <h3>Introduction</h3>
+                <p>
+                    BioAgriCure is an AI-powered platform designed to detect and suggest cures for plant diseases using Convolutional Neural Networks (CNNs) and deep learning. The system enables farmers, researchers, and agricultural enthusiasts to upload images of affected plants and receive instant, accurate diagnoses along with actionable treatment recommendations. By leveraging state-of-the-art machine learning models, BioAgriCure makes advanced agricultural technology accessible and user-friendly, contributing to sustainable farming practices and improved crop health management worldwide.
+                </p>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Testing Procedure</h3>
+                <ol class="testing-steps">
+                    <li><strong>Image Upload:</strong> Verify that users can successfully upload plant images through the web interface.</li>
+                    <li><strong>Preprocessing Validation:</strong> Ensure uploaded images are correctly resized and normalized for model input.</li>
+                    <li><strong>Model Accuracy:</strong> Test the CNN model's prediction accuracy against a validation dataset of known diseases.</li>
+                    <li><strong>Cure Verification:</strong> Cross-check that the recommended cures match the detected diseases from the database.</li>
+                    <li><strong>End-to-End Testing:</strong> Perform complete workflow tests from image upload to result display to ensure seamless operation.</li>
+                </ol>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Literature Review</h3>
+                <p>
+                    Artificial Intelligence has revolutionized agricultural disease detection by providing rapid, accurate, and cost-effective diagnostic solutions. Traditional methods often require expert knowledge and can be time-consuming, leading to delayed treatment and crop losses. Existing AI systems have shown promise but often suffer from limited accessibility, complex interfaces, or narrow disease coverage.
+                </p>
+                <p>
+                    BioAgriCure addresses these challenges by offering a comprehensive, user-friendly platform that combines advanced CNN architectures with an extensive disease database. The system not only identifies diseases with high accuracy but also provides practical treatment recommendations, making it a complete solution for modern agricultural disease management.
+                </p>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Objectives</h3>
+                <ul class="objectives-list">
+                    <li>Develop a highly accurate CNN-based disease detection system capable of identifying 42+ plant diseases</li>
+                    <li>Create an intuitive web interface accessible to users with varying levels of technical expertise</li>
+                    <li>Provide actionable cure recommendations alongside disease diagnoses</li>
+                    <li>Ensure system scalability and performance for real-world agricultural applications</li>
+                    <li>Contribute to sustainable farming practices through early disease detection and intervention</li>
+                    <li>Make advanced AI technology accessible to farmers in resource-limited settings</li>
+                </ul>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Methodology</h3>
+                <div class="methodology-steps">
+                    <div class="method-item">
+                        <div class="method-number">1</div>
+                        <div class="method-content">
+                            <h4>Image Upload</h4>
+                            <p>Users upload plant images through an intuitive web interface supporting multiple image formats (JPG, PNG, GIF).</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-number">2</div>
+                        <div class="method-content">
+                            <h4>Preprocessing</h4>
+                            <p>Images are automatically resized to 224×224 pixels and normalized to [0, 1] range for optimal model performance.</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-number">3</div>
+                        <div class="method-content">
+                            <h4>Disease Detection</h4>
+                            <p>The MobileNetV2-based CNN model analyzes the preprocessed image and predicts the disease with confidence scoring.</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-number">4</div>
+                        <div class="method-content">
+                            <h4>Cure Recommendation</h4>
+                            <p>The system retrieves disease-specific symptoms and treatment recommendations from a comprehensive CSV database.</p>
+                        </div>
+                    </div>
+                    <div class="method-item">
+                        <div class="method-number">5</div>
+                        <div class="method-content">
+                            <h4>Results Display</h4>
+                            <p>Detected disease, confidence score, symptoms, and cure recommendations are presented in a clear, actionable format.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Requirements</h3>
+                <div class="requirements-grid">
+                    <div class="requirement-card">
+                        <h4>Software Requirements</h4>
+                        <ul>
+                            <li>Python 3.8 or higher</li>
+                            <li>TensorFlow 2.x / Keras</li>
+                            <li>Flask web framework</li>
+                            <li>OpenCV for image processing</li>
+                            <li>NumPy and Pandas for data handling</li>
+                            <li>Modern web browser (Chrome, Firefox, Safari, Edge)</li>
+                        </ul>
+                    </div>
+                    <div class="requirement-card">
+                        <h4>Hardware Requirements</h4>
+                        <ul>
+                            <li>Minimum 4GB RAM (8GB recommended)</li>
+                            <li>2GB free disk space for model and dependencies</li>
+                            <li>CPU: Dual-core processor or better</li>
+                            <li>GPU: Optional but recommended for faster inference</li>
+                            <li>Internet connection for initial setup</li>
+                            <li>Camera or image capture device for field use</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section-item">
+                <h3>Applications</h3>
+                <ul class="applications-list">
+                    <li><strong>Farmers:</strong> Enable early disease detection to minimize crop losses and optimize treatment strategies</li>
+                    <li><strong>Agricultural Researchers:</strong> Facilitate large-scale disease surveillance and pattern analysis across regions</li>
+                    <li><strong>Extension Workers:</strong> Provide rapid diagnostic support in field consultations and farmer education programs</li>
+                    <li><strong>Students:</strong> Offer hands-on learning tools for agricultural science and AI applications</li>
+                    <li><strong>Policymakers:</strong> Support evidence-based agricultural policy decisions through disease monitoring data</li>
+                    <li><strong>Agribusinesses:</strong> Enhance quality control and crop management in commercial farming operations</li>
+                </ul>
+            </div>
+
+            <div class="back-home-container">
+                <a href="{{ url_for('main.index') }}" class="button">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

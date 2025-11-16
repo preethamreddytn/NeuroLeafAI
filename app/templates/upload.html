@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Image - BioAgriCure{% endblock %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='js/camera.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <div class="container">
+        <h2>Upload Plant Image</h2>
+        <p>Upload a clear image of your plant or affected leaves for disease detection.</p>
+        
+        <div class="upload-container">
+            <form method="POST" enctype="multipart/form-data" id="upload-form">
+                <div class="upload-options">
+            <div class="file-upload-wrapper">
+                <input type="file" id="file-upload" name="files" accept="image/*" multiple>
+                        <label for="file-upload" class="file-upload-label">
+                            <div class="upload-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <span>Choose Image</span>
+                        </label>
+                    </div>
+                    
+                    <div class="camera-upload-wrapper">
+                        <button type="button" id="camera-btn" class="camera-upload-label">
+                            <div class="upload-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </div>
+                            <span>Capture</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Selection Status -->
+                <div id="selection-status" class="selection-status" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span id="selection-count">0 items selected</span>
+                </div>
+                
+                <!-- Camera Modal -->
+                <div id="camera-modal" class="camera-modal" style="display: none;">
+                    <div class="camera-modal-content">
+                        <span class="close-camera">&times;</span>
+                        <video id="camera-video" autoplay playsinline></video>
+                        <canvas id="camera-canvas" style="display: none;"></canvas>
+                        <div class="camera-controls">
+                            <button type="button" id="capture-photo-btn" class="button">Take Photo</button>
+                            <button type="button" id="cancel-camera-btn" class="button secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="captured-image" name="captured_image">
+                
+                <div class="upload-button-container">
+                    <button type="submit" class="button">Analyze Image</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="upload-tips">
+            <h3>Tips for Best Results</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <div class="tip-number">01</div>
+                    <div class="tip-content">
+                        <h4>Image Quality</h4>
+                        <p>Use a clear, well-lit image</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-number">02</div>
+                    <div class="tip-content">
+                        <h4>Focus Area</h4>
+                        <p>Focus on the affected areas</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-number">03</div>
+                    <div class="tip-content">
+                        <h4>Reference Scale</h4>
+                        <p>Include a reference object for scale</p>
+                    </div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-number">04</div>
+                    <div class="tip-content">
+                        <h4>File Format</h4>
+                        <p>Supported formats: JPG, PNG, GIF</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

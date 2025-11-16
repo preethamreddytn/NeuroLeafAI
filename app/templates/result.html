@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Detection Results - BioAgriCure{% endblock %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/save-results.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="results-section">
+    <div class="container">
+        <h2>Detection Results</h2>
+        
+        {% if results %}
+        <div class="results-grid">
+            {% for result in results %}
+            <div class="result-card">
+                <div class="image-container">
+                    {% if result.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + result.image_filename) }}" alt="Uploaded Plant Image">
+                    {% else %}
+                    <p>No image available</p>
+                    {% endif %}
+                </div>
+
+                <div class="card-body">
+                    <div class="result-details">
+                    <h4>{{ result.image_filename or 'Uploaded Image' }}</h4>
+                    <div class="result-item">
+                        <h5>Disease</h5>
+                        <p class="disease-name">{{ result.disease if result.disease else (result.error if result.error else 'Not detected') }}</p>
+                    </div>
+
+                    <div class="result-item">
+                        <h5>Symptoms</h5>
+                        <ul class="symptoms-list">
+                            {% if result.symptoms %}
+                                {% for symptom in result.symptoms %}
+                                <li>{{ symptom }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No symptoms information available</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="result-item">
+                        <h5>Cure/Treatment</h5>
+                        <ul class="treatment-list">
+                            {% if result.cure %}
+                                {% for treatment in result.cure %}
+                                <li>{{ treatment }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No treatment information available</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="confidence-score">
+                        <h5>Confidence</h5>
+                        <div class="progress-bar">
+                            {% if result.confidence %}
+                            <div class="progress-fill" style="width: {{ (result.confidence * 100)|int }}%">{{ (result.confidence * 100)|int }}%</div>
+                            {% else %}
+                            <div class="progress-fill" style="width: 0%">0%</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-actions no-pdf">
+                            <button class="button secondary save-result-btn no-pdf" data-index="{{ loop.index0 }}">
+                                <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                                    <path fill="currentColor" d="M12 3v10.586l3.293-3.293 1.414 1.414L12 17.414l-4.707-4.707 1.414-1.414L11 13.586V3h1z" />
+                                    <path fill="currentColor" d="M5 20h14v-2H5v2z" />
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="action-buttons no-pdf">
+            <a href="{{ url_for('main.upload') }}" class="button">Analyze More</a>
+            <button id="save-all-results-btn" class="button secondary no-pdf">
+                <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <path fill="currentColor" d="M12 3v10.586l3.293-3.293 1.414 1.414L12 17.414l-4.707-4.707 1.414-1.414L11 13.586V3h1z" />
+                    <path fill="currentColor" d="M5 20h14v-2H5v2z" />
+                </svg>
+                Download All
+            </button>
+        </div>
+
+        {% elif result %}
+        <!-- Backwards-compatible single result rendering -->
+        <div class="result-container">
+            <div class="image-container">
+                {% if result.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + result.image_filename) }}" alt="Uploaded Plant Image">
+                {% else %}
+                <p>No image available</p>
+                {% endif %}
+            </div>
+            
+            <div class="result-details">
+                <div class="result-item">
+                    <h3>Disease</h3>
+                    <p class="disease-name">{{ result.disease if result.disease else 'Not detected' }}</p>
+                </div>
+                
+                <div class="result-item">
+                    <h3>Symptoms</h3>
+                    <ul class="symptoms-list">
+                        {% if result.symptoms %}
+                            {% for symptom in result.symptoms %}
+                            <li>{{ symptom }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No symptoms information available</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <div class="result-item">
+                    <h3>Cure/Treatment</h3>
+                    <ul class="treatment-list">
+                        {% if result.cure %}
+                            {% for treatment in result.cure %}
+                            <li>{{ treatment }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No treatment information available</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <div class="confidence-score">
+                    <h3>Confidence Score</h3>
+                    <div class="progress-bar">
+                        {% if result.confidence %}
+                        <div class="progress-fill" style="width: {{ (result.confidence * 100)|int }}%">{{ (result.confidence * 100)|int }}%</div>
+                        {% else %}
+                        <div class="progress-fill" style="width: 0%">0%</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ url_for('main.upload') }}" class="button">Analyze Another</a>
+            <button id="save-results-btn" class="button secondary no-pdf">
+                <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <path fill="currentColor" d="M12 3v10.586l3.293-3.293 1.414 1.414L12 17.414l-4.707-4.707 1.414-1.414L11 13.586V3h1z" />
+                    <path fill="currentColor" d="M5 20h14v-2H5v2z" />
+                </svg>
+                Save Results
+            </button>
+        </div>
+        {% else %}
+        <p>No results available. Please upload an image for analysis.</p>
+        <a href="{{ url_for('main.upload') }}" class="button">Upload Image</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
