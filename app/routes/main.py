@@ -1,14 +1,33 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 import os
 import time
+import threading
 from werkzeug.utils import secure_filename
 from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
-from app.models.disease_detector import DiseaseDetector
 
 main_bp = Blueprint('main', __name__)
 
+# Lazy-loaded detector (avoid heavy work at import time)
+_detector = None
+_detector_lock = threading.Lock()
 
-detector = DiseaseDetector()
+def get_detector():
+    """Thread-safe lazy loader for the DiseaseDetector."""
+    global _detector
+    if _detector is None:
+        with _detector_lock:
+            if _detector is None:
+                start = time.time()
+                # import here so model load happens only when needed
+                from app.models.disease_detector import DiseaseDetector
+                try:
+                    _detector = DiseaseDetector()
+                    elapsed = time.time() - start
+                    print(f"✓ DiseaseDetector loaded in {elapsed:.1f}s")
+                except Exception as e:
+                    print(f"✗ Error initializing DiseaseDetector: {e}")
+                    _detector = None
+    return _detector
 
 @main_bp.route('/')
 def index():
@@ -35,6 +54,7 @@ def upload():
             return redirect(request.url)
 
         results = []
+        detector = get_detector()
         for file in files:
             if file and allowed_file(file.filename):
                 # Create a unique filename to avoid collisions
@@ -45,7 +65,11 @@ def upload():
 
                 # Process the file with our CNN model
                 try:
-                    res = detector.predict(filepath)
+                    if detector is None:
+                        # Detector failed to initialize, return helpful error
+                        res = {"error": "Model not available. Check server logs for model load errors."}
+                    else:
+                        res = detector.predict(filepath)
                 except Exception as e:
                     # On model errors, include an error entry but continue
                     res = {"error": str(e)}
@@ -75,15 +99,26 @@ def contact():
         message = request.form.get('message')
         
         # For now, just show success message
-        # In production, you would send email or save to database
-        flash('Thank you for contacting BioAgriCure! We\'ll get back to you soon.', 'success')
+        flash('Thank you for BioAgriCure! We\'ll get back to you soon.', 'success')
         return redirect(url_for('main.contact'))
     
     return render_template('contact.html')
+
+@main_bp.route('/warmup', methods=['GET'])
+def warmup():
+    """
+    Call this endpoint once after deploy to load model into memory.
+    Example: curl https://yourapp.onrender.com/warmup
+    """
+    start = time.time()
+    detector = get_detector()
+    if detector is None:
+        return jsonify({"status": "error", "message": "Detector failed to initialize. Check logs."}), 500
+    elapsed = time.time() - start
+    return jsonify({"status": "ok", "model_load_time_s": round(elapsed, 2)}), 200
 
 def allowed_file(filename):
     return (
         '.' in filename and
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     )
-
