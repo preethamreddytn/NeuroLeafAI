@@ -7,3 +7,4 @@ matplotlib
 scikit-learn
 pillow
 requests
+gunicorn==20.1.0
