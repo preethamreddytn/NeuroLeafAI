@@ -2,6 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 from tensorflow.keras.preprocessing import image
+from io import BytesIO
+from PIL import Image
 from tensorflow.keras.models import load_model
 from config import MODEL_PATH
 
@@ -102,6 +104,60 @@ class DiseaseDetector:
         img_array = np.expand_dims(img_array, axis=0)
         img_array = img_array / 255.0 
         return img_array
+
+    def preprocess_image_from_bytes(self, image_bytes):
+        """
+        Preprocess an image from raw bytes so the detector can predict without saving to disk
+        """
+        try:
+            img = Image.open(BytesIO(image_bytes)).convert('RGB')
+        except Exception:
+            # Fall back to loading as array using Keras utilities
+            img = image.load_img(BytesIO(image_bytes), target_size=(224, 224))
+
+        img = img.resize((224, 224))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array = img_array / 255.0
+        return img_array
+
+    def predict_from_bytes(self, image_bytes):
+        """
+        Predict the disease from image raw bytes (for in-memory uploads)
+        """
+        if self.model is None:
+            return {
+                "disease": "Model Not Available",
+                "confidence": 0.0,
+                "symptoms": ["The disease detection model is not loaded. Please train the model first."],
+                "cure": ["Train the model by running: python train.py"]
+            }
+
+        img_array = self.preprocess_image_from_bytes(image_bytes)
+
+        predictions = self.model.predict(img_array)
+        predicted_class = np.argmax(predictions[0])
+        confidence = np.max(predictions[0])
+
+        if confidence < 0.5:
+            return {
+                "disease": "Unable to Detect Disease",
+                "confidence": float(confidence),
+                "symptoms": ["The model is not confident about this image", "Please upload a clearer image of the affected plant"],
+                "cure": ["Ensure good lighting and focus", "Take a close-up photo of the diseased area", "Consult a local agricultural expert if needed"]
+            }
+
+        disease_name = self.class_names[predicted_class] if predicted_class < len(self.class_names) else "Unknown Disease"
+
+        formatted_name = self._format_disease_name(disease_name)
+        disease_info = self.get_disease_info(disease_name)
+
+        return {
+            "disease": formatted_name,
+            "confidence": float(confidence),
+            "symptoms": disease_info["symptoms"],
+            "cure": disease_info["cure"]
+        }
     
     def predict(self, img_path):
         """

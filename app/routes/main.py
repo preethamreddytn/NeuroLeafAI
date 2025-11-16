@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 import os
 import time
 from werkzeug.utils import secure_filename
-from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from config import ALLOWED_EXTENSIONS
+import base64
 from app.models.disease_detector import DiseaseDetector
 
 main_bp = Blueprint('main', __name__)
@@ -37,20 +38,18 @@ def upload():
         results = []
         for file in files:
             if file and allowed_file(file.filename):
-                # Create a unique filename to avoid collisions
-                safe_name = secure_filename(file.filename or f'upload-{int(time.time())}.jpg')
-                filename = f"{int(time.time()*1000)}_{safe_name}"
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(filepath)
+                    # Process the file in-memory (no saving to disk)
+                    file_bytes = file.read()
+                    try:
+                        res = detector.predict_from_bytes(file_bytes)
+                    except Exception as e:
+                        # On model errors, include an error entry but continue
+                        res = {"error": str(e)}
 
-                # Process the file with our CNN model
-                try:
-                    res = detector.predict(filepath)
-                except Exception as e:
-                    # On model errors, include an error entry but continue
-                    res = {"error": str(e)}
-
-                res['image_filename'] = filename
+                    # Provide image data as base64 data URI so the page can display it without writing to disk
+                    mime_type = file.content_type or 'image/jpeg'
+                    b64 = base64.b64encode(file_bytes).decode('utf-8')
+                    res['image_data'] = f"data:{mime_type};base64,{b64}"
                 results.append(res)
 
         # Render results page with all predictions
