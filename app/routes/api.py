@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-import os
-from werkzeug.utils import secure_filename
-from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+import io
+from PIL import Image
+from config import ALLOWED_EXTENSIONS
 
 api_bp = Blueprint('api', __name__)
 
@@ -24,7 +24,8 @@ def detect_disease():
         return jsonify({"error": "No file provided"}), 400
 
     results = []
-    import time
+    from app.routes.main import get_detector
+    detector = get_detector()
 
     for file in files:
         if file.filename == '':
@@ -32,14 +33,29 @@ def detect_disease():
             continue
 
         if file and allowed_file(file.filename):
-            safe_name = secure_filename(file.filename or f'upload-{int(time.time())}.jpg')
-            filename = f"{int(time.time()*1000)}_{safe_name}"
-            filepath = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(filepath)
-
-            # TODO: plug in model prediction here
-            # For now return placeholder per-file
-            results.append({"filename": filename, "status": "received", "message": "Model not implemented"})
+            try:
+                # Read image into memory
+                img_data = file.read()
+                img = Image.open(io.BytesIO(img_data))
+                
+                # Convert to RGB if needed
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Create in-memory file-like object
+                in_memory_file = io.BytesIO()
+                img.save(in_memory_file, format='JPEG')
+                in_memory_file.seek(0)
+                
+                # Process with detector
+                if detector is None:
+                    result = {"error": "Model not available"}
+                else:
+                    result = detector.predict_from_stream(in_memory_file)
+                
+                results.append(result)
+            except Exception as e:
+                results.append({"error": str(e)})
         else:
             results.append({"error": "Invalid file type", "filename": file.filename})
 

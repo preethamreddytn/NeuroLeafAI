@@ -1,10 +1,12 @@
 // Theme Toggle Functionality
 function initThemeToggle() {
     const toggleButton = document.getElementById('theme-toggle-btn');
-    const currentTheme = localStorage.getItem('theme') || 'light';
     
-    // Apply the saved theme
-    document.documentElement.setAttribute('data-theme', currentTheme);
+    // Add active class if in dark mode
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    if (currentTheme === 'dark') {
+        toggleButton.classList.add('active');
+    }
     
     // Toggle theme on button click
     toggleButton.addEventListener('click', function() {
@@ -13,6 +15,13 @@ function initThemeToggle() {
         
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+        
+        // Update active class
+        if (newTheme === 'dark') {
+            toggleButton.classList.add('active');
+        } else {
+            toggleButton.classList.remove('active');
+        }
     });
 }
 

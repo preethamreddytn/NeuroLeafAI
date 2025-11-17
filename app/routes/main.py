@@ -2,8 +2,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 import os
 import time
 import threading
+import io
+import base64
 from werkzeug.utils import secure_filename
-from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from config import ALLOWED_EXTENSIONS
+from PIL import Image
+import numpy as np
 
 main_bp = Blueprint('main', __name__)
 
@@ -57,24 +61,37 @@ def upload():
         detector = get_detector()
         for file in files:
             if file and allowed_file(file.filename):
-                # Create a unique filename to avoid collisions
-                safe_name = secure_filename(file.filename or f'upload-{int(time.time())}.jpg')
-                filename = f"{int(time.time()*1000)}_{safe_name}"
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(filepath)
-
-                # Process the file with our CNN model
                 try:
+                    # Read image into memory
+                    img_data = file.read()
+                    img = Image.open(io.BytesIO(img_data))
+                    
+                    # Convert to RGB if needed (handle RGBA, grayscale, etc.)
+                    if img.mode != 'RGB':
+                        img = img.convert('RGB')
+                    
+                    # Encode image as base64 for display
+                    buffered = io.BytesIO()
+                    img.save(buffered, format='JPEG')
+                    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+                    
+                    # Create in-memory file-like object for analysis
+                    in_memory_file = io.BytesIO()
+                    img.save(in_memory_file, format='JPEG')
+                    in_memory_file.seek(0)
+                    
+                    # Process the file with our CNN model
                     if detector is None:
-                        # Detector failed to initialize, return helpful error
                         res = {"error": "Model not available. Check server logs for model load errors."}
                     else:
-                        res = detector.predict(filepath)
+                        res = detector.predict_from_stream(in_memory_file)
+                    
+                    # Add image data to result
+                    res['image_data'] = f"data:image/jpeg;base64,{img_base64}"
                 except Exception as e:
-                    # On model errors, include an error entry but continue
                     res = {"error": str(e)}
+                    res['image_data'] = None
 
-                res['image_filename'] = filename
                 results.append(res)
 
         # Render results page with all predictions

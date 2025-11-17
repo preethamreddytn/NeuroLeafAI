@@ -103,9 +103,23 @@ class DiseaseDetector:
         img_array = img_array / 255.0 
         return img_array
     
+    def preprocess_image_from_stream(self, stream):
+        """
+        Preprocess image from in-memory stream (file-like object)
+        - Resize to 224x224
+        - Normalize to [0, 1] range
+        """
+        from PIL import Image as PILImage
+        img = PILImage.open(stream)
+        img = img.resize((224, 224))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array = img_array / 255.0 
+        return img_array
+    
     def predict(self, img_path):
         """
-        Predict the disease from an image
+        Predict the disease from an image file path
         """
         if self.model is None:
             return {
@@ -116,6 +130,27 @@ class DiseaseDetector:
             }
         
         img_array = self.preprocess_image(img_path)
+        return self._get_prediction(img_array)
+    
+    def predict_from_stream(self, stream):
+        """
+        Predict the disease from an in-memory image stream (file-like object)
+        """
+        if self.model is None:
+            return {
+                "disease": "Model Not Available",
+                "confidence": 0.0,
+                "symptoms": ["The disease detection model is not loaded. Please train the model first."],
+                "cure": ["Train the model by running: python train.py"]
+            }
+        
+        img_array = self.preprocess_image_from_stream(stream)
+        return self._get_prediction(img_array)
+    
+    def _get_prediction(self, img_array):
+        """
+        Get prediction from preprocessed image array
+        """
         
         predictions = self.model.predict(img_array)
         predicted_class = np.argmax(predictions[0])

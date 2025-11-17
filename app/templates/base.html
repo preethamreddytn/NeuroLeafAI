@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Apply theme instantly to prevent flash on page load
+        (function() {
+            try {
+                // Disable transitions during theme initialization
+                document.documentElement.style.transition = 'none';
+                
+                var theme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                
+                // Re-enable transitions after a minimal delay
+                setTimeout(function() {
+                    document.documentElement.style.transition = '';
+                }, 0);
+            } catch (e) {}
+        })();
+    </script>
     <title>{% block title %}BioAgriCure - Plant Disease Detection{% endblock %}</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
