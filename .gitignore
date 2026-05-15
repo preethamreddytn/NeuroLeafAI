@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.pkl
+*.csv
+instance/
+.env
+*.log
+*.h5
+.mdl
